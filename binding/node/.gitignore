@@ -1,0 +1,14 @@
+#node files
+npm-debug.log
+node_modules/
+
+# Mac files
+.DS_Store
+
+# Build artifacts
+.dist/
+.package/
+src/generated/**/*
+src/*.d.ts
+src/*.js
+src/*.map

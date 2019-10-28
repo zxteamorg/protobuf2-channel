@@ -1,0 +1,84 @@
+image: node:11-alpine
+
+.scripting: &utils |
+  function setup_npm_token() {
+    if [ -z "$NPMJS_ORG_TOKEN" ]; then
+      echo "NPMJS_ORG_TOKEN variable is not defined" >&2
+      exit 254
+    fi
+    echo "//registry.npmjs.org/:_authToken=$NPMJS_ORG_TOKEN" >> ~/.npmrc
+  }
+  function verify_package_version() {
+    if [ -z "${CI_COMMIT_TAG}" ]; then
+      echo "The function verify_package_version() is able to use for tags only. Variable CI_COMMIT_TAG is not set." >&2
+      exit 127
+    fi
+    local PACKAGE_VERSION=$(awk '/version/{gsub(/("|",)/,"",$2);print $2};' binding/node/package.json)
+    if [ "$PACKAGE_VERSION" != "$CI_COMMIT_TAG" ]; then
+      echo "Package version '${PACKAGE_VERSION}; is not same as tag version '${CI_COMMIT_TAG}'" >&2
+      exit 255
+    fi
+  }
+
+stages:
+  - build
+  - publish
+
+build:
+  stage: build
+  before_script:
+    - cd binding/node && npm install --progress=false
+  script:
+    - cd binding/node
+    - npm run build
+    - \[ -f package-lock.json \] && cp package-lock.json .dist/ || true
+  artifacts:
+    expire_in: 3 days
+    untracked: false
+    paths:
+      - binding/node/.build/
+      - binding/node/.dist/
+      - binding/node/node_modules/
+      - binding/node/src/
+      - binding/node/.npmrc
+      - binding/node/package.json
+      - binding/node/README.md
+    when: on_success
+
+pages:
+  stage: publish
+  dependencies:
+    - build
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - mkdir -p "public/$CI_COMMIT_REF_SLUG"
+    - echo "CI_PROJECT_NAMESPACE = $CI_PROJECT_NAMESPACE" >> "public/$CI_COMMIT_REF_SLUG/build.log"
+    - echo "CI_COMMIT_REF_SLUG = $CI_COMMIT_REF_SLUG" >> "public/$CI_COMMIT_REF_SLUG/build.log"
+    - env >> "public/$CI_COMMIT_REF_SLUG/build.log"
+    - echo >> "public/$CI_COMMIT_REF_SLUG/build.log"
+    - echo "See log file http://$CI_PROJECT_NAMESPACE.pages.zxteam.net/$CI_PROJECT_NAME/$CI_COMMIT_REF_SLUG/build.log"
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
+    - dev
+
+publish:
+  stage: publish
+  dependencies:
+    - build
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - *utils
+    - verify_package_version
+    - setup_npm_token
+  script:
+    - echo "Publish package to the npmjs.org registry"
+    - cat binding/node/.dist/.npmrc
+    - cd binding/node/.dist && npm publish
+  only:
+    - tags

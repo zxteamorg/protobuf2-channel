@@ -1,0 +1,52 @@
+{
+	"name": "@zxteam/protobuf2-channel-contract",
+	"version": "0.0.1",
+	"description": "ZXTeam's RPC + Notification Channel",
+	"main": "./src/index.js",
+	"types": "./src/index.d.ts",
+	"author": {
+		"name": "ZXTeam",
+		"email": "devel@zxteam.net",
+		"url": "https://www.zxteam.net"
+	},
+	"contributors": [
+		{
+			"name": "Maxim Anurin",
+			"email": "maxim.anurin@zxteam.net",
+			"url": "https://www.anurin.name"
+		},
+		{
+			"name": "Serhii Zghama",
+			"email": "serhii.zghama@zxteam.net"
+		}
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/google-protobuf": "^3.7.2",
+		"@types/node": "^11.13.22",
+		"@zxnode/build": "^0.0.34",
+		"ts-protoc-gen": "^0.12.0"
+	},
+	"dependencies": {
+		"google-protobuf": "^3.10.0"
+	},
+	"engines": {
+		"node": ">=11"
+	},
+	"keywords": [],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@code.zxteam.net:22282/zxtrader/terminal/host.git"
+	},
+	"bugs": {
+		"url": "https://github.com/zxteamorg/protobuf2-channel/issues"
+	},
+	"homepage": "https://github.com/zxteamorg/protobuf2-channel",
+	"scripts": {
+		"gen:lnx": "mkdir -p src/generated && protoc --plugin=\"protoc-gen-ts=./node_modules/.bin/protoc-gen-ts\" --js_out=\"import_style=commonjs,binary:src/generated\" --ts_out=\"src/generated\" --proto_path=\"../../proto/\" ../../proto/*.proto",
+		"gen:win": "MKDIR src\\generated; FOR /f %P IN ('DIR /b ..\\..\\proto\\*.proto') DO (protoc --plugin=protoc-gen-ts=node_modules\\.bin\\protoc-gen-ts.cmd --js_out=import_style=commonjs,binary:src\\generated --ts_out=src\\generated --proto_path=..\\..\\proto\\ ..\\..\\proto\\%P)",
+		"build:lnx": "zxbuild clean && npm run gen:lnx && zxbuild dist",
+		"build:win": "zxbuild clean && npm run gen:win && zxbuild dist"
+	},
+	"private": true
+}

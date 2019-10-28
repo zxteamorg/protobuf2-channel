@@ -1,0 +1,8 @@
+syntax = "proto2";
+package org.zxteam.channel.v1;
+
+enum Type {
+  NOTIFICATION    = 0;
+  INVOKE_REQUEST  = 1;
+  INVOKE_RESPONSE = 2;
+}

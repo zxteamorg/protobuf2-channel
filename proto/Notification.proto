@@ -1,0 +1,14 @@
+syntax = "proto2";
+package org.zxteam.channel.v1;
+
+import public "Type.proto";
+
+message Notification /* extends Message */ {
+  // 1, 2, 3 - reserved
+
+  // Message
+  required Type messageType       = 4 [default = NOTIFICATION];
+
+  // Notification
+  required bytes notificationData = 5;
+}
