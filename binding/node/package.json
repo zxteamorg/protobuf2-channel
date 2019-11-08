@@ -1,6 +1,6 @@
 {
 	"name": "@zxteam/protobuf2-channel-contract",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "ZXTeam's RPC + Notification Channel",
 	"main": "./src/index.js",
 	"types": "./src/index.d.ts",
