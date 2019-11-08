@@ -1,4 +1,4 @@
-image: node:11-alpine
+image: docker.registry.zxteam.net/pub/docker/build/node10-alpine.protoc-mysqlcli-psqlcli:3
 
 .scripting: &utils |
   function setup_npm_token() {
