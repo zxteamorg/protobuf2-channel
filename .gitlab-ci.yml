@@ -2,11 +2,11 @@ image: docker.registry.zxteam.net/pub/docker/build/node11-alpine.protoc:latest
 
 .scripting: &utils |
   function setup_npm_token() {
-    if [ -z "$NPMJS_ORG_TOKEN" ]; then
-      echo "NPMJS_ORG_TOKEN variable is not defined" >&2
+    if [ -z "$NPM_REGISTRY_ZXTEAM_TOKEN" ]; then
+      echo "NPM_REGISTRY_ZXTEAM_TOKEN variable is not defined" >&2
       exit 254
     fi
-    echo "//registry.npmjs.org/:_authToken=$NPMJS_ORG_TOKEN" >> ~/.npmrc
+    echo "//npm.registry.zxteam.net/:_authToken=$NPM_REGISTRY_ZXTEAM_TOKEN" >> ~/.npmrc
   }
   function verify_package_version() {
     if [ -z "${CI_COMMIT_TAG}" ]; then
