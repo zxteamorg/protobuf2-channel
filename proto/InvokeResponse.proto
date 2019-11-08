@@ -7,11 +7,36 @@ message InvokeResponse /* extends Message */ {
   // 1, 2, 3 - reserved
 
   // Message
-  required Type   messageType   = 4 [default = INVOKE_RESPONSE];
-
-  required uint32 invokeId      = 5;
+  required Type   messageType      = 4;
 
   // InvokeResponse
-  required bytes  responseData  = 6;
+  required uint32 invokeId         = 5;
 }
-  
+
+message InvokeResponseSuccess /* extends InvokeResponse */ {
+  // 1, 2, 3 - reserved
+
+  // Message
+  required Type   messageType      = 4 [default = INVOKE_RESPONSE_SUCCESS];
+
+  // InvokeResponse
+  required uint32 invokeId         = 5;
+
+  // InvokeResponseSuccess
+  required bytes  responseData     = 6;
+}
+
+message InvokeResponseFailure /* extends InvokeResponse */ {
+  // 1, 2, 3 - reserved
+
+  // Message
+  required Type   messageType      = 4 [default = INVOKE_RESPONSE_FAILURE];
+
+  // InvokeResponse
+  required uint32 invokeId         = 5;
+
+  // InvokeResponseFailure
+  required int32      errorCode    = 6;
+  required string     errorMessage = 7; // A short description of the error
+  optional bytes      errorData    = 8; // Contains additional information about the error
+}
