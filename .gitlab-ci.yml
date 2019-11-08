@@ -26,45 +26,38 @@ stages:
 
 build:
   stage: build
-  before_script:
+  script:
     - cd binding/node
     - npm install --progress=false
-  script:
     - npm run build:lnx
     - \[ -f package-lock.json \] && cp package-lock.json .dist/ || true
   artifacts:
     expire_in: 3 days
     untracked: false
     paths:
-      - binding/node/.build/
       - binding/node/.dist/
-      - binding/node/node_modules/
-      - binding/node/src/
-      - binding/node/.npmrc
-      - binding/node/package.json
-      - binding/node/README.md
     when: on_success
 
-pages:
-  stage: publish
-  dependencies:
-    - build
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - mkdir -p "public/$CI_COMMIT_REF_SLUG"
-    - echo "CI_PROJECT_NAMESPACE = $CI_PROJECT_NAMESPACE" >> "public/$CI_COMMIT_REF_SLUG/build.log"
-    - echo "CI_COMMIT_REF_SLUG = $CI_COMMIT_REF_SLUG" >> "public/$CI_COMMIT_REF_SLUG/build.log"
-    - env >> "public/$CI_COMMIT_REF_SLUG/build.log"
-    - echo >> "public/$CI_COMMIT_REF_SLUG/build.log"
-    - echo "See log file http://$CI_PROJECT_NAMESPACE.pages.zxteam.net/$CI_PROJECT_NAME/$CI_COMMIT_REF_SLUG/build.log"
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
-  only:
-    - master
-    - dev
+# pages:
+#   stage: publish
+#   dependencies:
+#     - build
+#   variables:
+#     GIT_STRATEGY: none
+#   script:
+#     - mkdir -p "public/$CI_COMMIT_REF_SLUG"
+#     - echo "CI_PROJECT_NAMESPACE = $CI_PROJECT_NAMESPACE" >> "public/$CI_COMMIT_REF_SLUG/build.log"
+#     - echo "CI_COMMIT_REF_SLUG = $CI_COMMIT_REF_SLUG" >> "public/$CI_COMMIT_REF_SLUG/build.log"
+#     - env >> "public/$CI_COMMIT_REF_SLUG/build.log"
+#     - echo >> "public/$CI_COMMIT_REF_SLUG/build.log"
+#     - echo "See log file http://$CI_PROJECT_NAMESPACE.pages.zxteam.net/$CI_PROJECT_NAME/$CI_COMMIT_REF_SLUG/build.log"
+#   artifacts:
+#     paths:
+#       - public
+#     expire_in: 30 days
+#   only:
+#     - master
+#     - dev
 
 publish:
   stage: publish
@@ -78,7 +71,8 @@ publish:
     - setup_npm_token
   script:
     - echo "Publish package to the npmjs.org registry"
-    - cat binding/node/.dist/.npmrc
-    - cd binding/node/.dist && npm publish
+    - cd binding/node/.dist
+    - cat .npmrc
+    - npm publish
   only:
     - tags
