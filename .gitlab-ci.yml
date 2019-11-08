@@ -27,9 +27,9 @@ stages:
 build:
   stage: build
   before_script:
-    - cd binding/node && npm install --progress=false
-  script:
     - cd binding/node
+    - npm install --progress=false
+  script:
     - npm run build
     - \[ -f package-lock.json \] && cp package-lock.json .dist/ || true
   artifacts:
