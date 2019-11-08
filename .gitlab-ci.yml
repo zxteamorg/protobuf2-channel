@@ -30,7 +30,7 @@ build:
     - cd binding/node
     - npm install --progress=false
   script:
-    - npm run build
+    - npm run build:lnx
     - \[ -f package-lock.json \] && cp package-lock.json .dist/ || true
   artifacts:
     expire_in: 3 days
