@@ -1,3 +1,4 @@
+export { InvokeCancel } from "./generated/InvokeCancel_pb";
 export { InvokeRequest } from "./generated/InvokeRequest_pb";
 export { InvokeResponse, InvokeResponseSuccess, InvokeResponseFailure } from "./generated/InvokeResponse_pb";
 export { Message } from "./generated/Message_pb";

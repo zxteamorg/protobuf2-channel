@@ -6,4 +6,5 @@ enum Type {
   INVOKE_REQUEST          = 1;
   INVOKE_RESPONSE_SUCCESS = 2;
   INVOKE_RESPONSE_FAILURE = 3;
+  INVOKE_CANCEL           = 4;
 }
